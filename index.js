@@ -1,6 +1,15 @@
 // 1 Fetch, Load and Show Categories on html
 
 // create loadCategores
+// time function state here
+function getTimeString(time){
+  const hour = parseInt(time / 3600)
+  let remaingSecond = time % 3600
+  let munute = parseInt(remaingSecond / 60)
+  remaingSecond = remaingSecond % 60;
+  return `${hour} hour ago ${munute} munute ${remaingSecond}second ago`
+}
+// time function state here
 
 const loadCategores =() =>{
     fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
@@ -16,9 +25,37 @@ const loadVideos =() =>{
     .catch(erro => console.log(erro))
 }
 
+// button Container Id start
+const loadCategoresVideos =(id) =>{
+ 
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+  .then(res => res.json())
+  .then(data => displayVideso(data.category
+  ))
+  .catch(err => console.log(err))
+  // fetch
+
+  
+}
+// button Container Id start
+
 // show videos display
 const displayVideso = (video) =>{
     const videoContainer = document.getElementById('videos')
+    videoContainer.innerHTML = ""
+    if(video.length == 0){
+      videoContainer.classList.remove('grid')
+      videoContainer.innerHTML = `
+      <div class = "flex flex-col justify-center items-center gap-y-5">
+      <span><img src ="images/Icon.png"/></span>
+      <h2 class="text-4xl">Opns!! Sory, There is no content hete</h2>
+      </div>
+      
+      `
+    }
+    else{
+      videoContainer.classList.add('grid')
+    }
     console.log(video);
     video.forEach(video =>{
         console.log(video);
@@ -28,8 +65,9 @@ const displayVideso = (video) =>{
         <figure class ="h-[200px] relative">
     <img class ="h-full w-full object-cover"
       src=${video.thumbnail} />
-      <span class="absolute right-2 bottom-2 bg-black text-white p-2 rounded-md text-xs">${video.others.posted_date}
-      </span>
+      ${video.others.posted_date? ` <span class="absolute right-2 bottom-2 bg-black text-white p-2 rounded-md text-xs">${getTimeString(video.others.posted_date)}
+      </span>`:""}
+     
   </figure>
   <div class="px-0 p-1 flex gap-2">
     <div>
@@ -64,11 +102,15 @@ const displayCategors = (categoris) =>{
     console.log(item);
     // create a button
 
-    const button = document.createElement('button')
-    button.classList = 'btn'
-    button.innerText = item.category
+    const buttonContainer = document.createElement('div')
+    buttonContainer.innerHTML = `
+    <button onclick="loadCategoresVideos(${item.category_id})" class="btn">
+    ${item.category}
+    </button>
+    
+    `
     // add button to catagores
-    categoresContainer.append(button)
+    categoresContainer.append(buttonContainer)
     
   });  
     
