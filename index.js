@@ -11,6 +11,15 @@ function getTimeString(time){
 }
 // time function state here
 
+
+const removeActiveClas =() =>{
+const buttons = document.getElementsByClassName("category-btn")
+console.log(buttons);
+for(let btn of buttons){
+  btn.classList.remove('active')
+}
+
+}
 const loadCategores =() =>{
     fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
     .then(res => res.json())
@@ -30,13 +39,50 @@ const loadCategoresVideos =(id) =>{
  
   fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
   .then(res => res.json())
-  .then(data => displayVideso(data.category
-  ))
+  .then(data => {
+    // sobaike active class remove koro
+    removeActiveClas()
+    // id er class k add koro
+    const activeBtn = document.getElementById(`btn-${id}`)
+    activeBtn.classList.add("active")
+    console.log(activeBtn);
+    
+    displayVideso(data.category)
+  })
   .catch(err => console.log(err))
   // fetch
 
   
 }
+const  ShowDetails = (videoId) =>{
+console.log(videoId);
+fetch('https://openapi.programming-hero.com/api/phero-tube/video/aaac')
+.then(res => res.json())
+.then(data => showDetailsDisplay(data.video))
+.catch(err => console.log(err))
+
+
+}
+
+
+const showDetailsDisplay = (video) =>{
+  console.log(video);
+  const modalContainer = document.getElementById('modal-content')
+  
+  document.getElementById('showModal').click();
+  
+  modalContainer.innerHTML = `
+  <img src ="${video.thumbnail}"/>
+  <p>${video.description}</p>
+  
+  
+  `
+
+  
+}
+
+
+
 // button Container Id start
 
 // show videos display
@@ -83,6 +129,10 @@ const displayVideso = (video) =>{
     <p class="text-xs">${video.others.views} views</p>
     </div>
   </div>
+  <div>
+  <button onclick="ShowDetails('${video.video_id}')" class="btn btn-error btn-sm">ShowDetails</button>
+  
+  </div>
         
         
         `;
@@ -104,7 +154,7 @@ const displayCategors = (categoris) =>{
 
     const buttonContainer = document.createElement('div')
     buttonContainer.innerHTML = `
-    <button onclick="loadCategoresVideos(${item.category_id})" class="btn">
+    <button id="btn-${item.category_id}" onclick="loadCategoresVideos(${item.category_id})" class="btn category-btn">
     ${item.category}
     </button>
     

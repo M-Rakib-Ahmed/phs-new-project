@@ -44,5 +44,14 @@ function getTimeString(time){
     return `${hour} hour ago ${munute} munute ${remaingSecond}second ago`
 }
 
-// console.log(getTimeString(7865));
+// console.log(getTimeString(5145545));
 
+
+
+function height(){
+    var height = 123.56;
+    var type = (height >= 190) ? "taler" : "little short"
+    return type
+}
+
+console.log(height());
